@@ -74,10 +74,11 @@ reconozca la carpeta como un Módulo.
 
 ## Uso
 
-Para ejecutar las pruebas unitarias desde la carpeta src, utiliza el siguiente comando:
+Para ejecutar las pruebas unitarias desde la carpeta test, utiliza los siguientes comandos:
 
 `
-  Hipoteca-Inversa\src> python -m unittest discover ..\tests -p '*test*.py'
+  Hipoteca-Inversa> cd tests
+  Hipoteca-Inversa\test> python Hipoteca_Inversa_Tests.py
 `
 
 Si deseas ejecutarlas desde la carpeta raíz, asegúrate de incluir la ruta de búsqueda de los módulos al inicio del módulo de pruebas:
@@ -85,4 +86,30 @@ Si deseas ejecutarlas desde la carpeta raíz, asegúrate de incluir la ruta de b
 `
   import sys
   sys.path.append("src")
+`
+
+Si se desea devolver, ejecuta el siguiente comando cuantas veces sea necesario:
+`
+  cd ..
+`
+
+Para ejecutar la interfaz de usuario mediante por consola, utiliza los siguientes comandos:
+
+`
+  Hipoteca-Inversa> cd src
+  Hipoteca-Inversa\src> cd Console
+  Hipoteca-Inversa\src\Console> python Hipoteca_Inversa_Console.py
+`
+
+Si se desea devolver, ejecuta el siguiente comando cuantas veces sea necesario:
+`
+  cd ..
+`
+
+Para ejecutar la interfaz gráfica de usuario, utiliza los siguientes comandos:
+
+`
+  Hipoteca-Inversa> cd src
+  Hipoteca-Inversa\src> cd Interface
+  Hipoteca-Inversa\src\Interface> python Hipoteca_Inversa_Interface.py
 `

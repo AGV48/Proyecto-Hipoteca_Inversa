@@ -20,7 +20,7 @@ INTERES_MINIMO = 6
 INTERES_MAXIMO = 43
 
 ESTADOS_CIVILES = ["soltero", "viudo", "casado", "divorciado", "soltera", "viuda", "casada", "divorciada"]
-SEXOS = ["masculino", "femenino", "hombre", "mujer", "nn", ""]
+SEXOS = ["hombre", "mujer"]
 
 # EXCEPCIONES
 class Hipoteca_Exception(Exception):
@@ -178,13 +178,13 @@ class Calcular_Hipoteca_Inversa:
             raise Tasa_Exception(interes)
 
     # Verifica que ningun valor sea negativo
-    def verificarValores_negativos(valor_inmueble, interes, tiempo_restante):
-        if valor_inmueble < 0 or interes < 0 or tiempo_restante < 0:
+    def verificarValores_negativos(valor_inmueble, interes, edad):
+        if valor_inmueble < 0 or interes < 0 or edad < 0:
             raise Negative_Exception()
         
     # Verifica que ningun campo haya quedado vacio
-    def verificarValores_vacios(valor_inmueble, interes, tiempo_restante):
-        if valor_inmueble == None or interes == None or tiempo_restante == None:
+    def verificarValores_vacios(valor_inmueble, interes, edad):
+        if valor_inmueble == None or interes == None or edad == None:
             raise None_Exception()
 
     # Verifica que la edad del usuario no esté por debajo del limite
