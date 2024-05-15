@@ -8,7 +8,7 @@ Andrea Márquez Sánchez
 
 ## ¿Qué es y para qué es?
 
-Este proyecto tiene como objetivo calcular una Hipoteca Inversa.
+Este proyecto tiene como objetivo calcular una Hipoteca Inversa desarrollada en Python.
 
 ## ¿Cómo lo hago funcionar?
 
@@ -71,6 +71,12 @@ La estructura del proyecto sigue las prácticas recomendadas para mantener un c�
 
 Recuerde que cada carpeta de código fuente debe contener un archivo __init__.py que permite que python
 reconozca la carpeta como un Módulo.
+
+* Ejecución de la GUI
+Para ejecutar la interfaz gráfica de usuario, sigue estos pasos:
+
+Navega hasta la carpeta src/Interface del proyecto.
+Ejecuta el siguiente comando en la terminal o ventana de comandos: python Hipoteca_Inversa_Interface.py.
 
 ## Uso
 

@@ -76,8 +76,17 @@ class None_Exception(Exception):
 #interes: tasa de intereses mensual, expresado como porcentaje (multiplicada por 100)
 #tiempo_restante: tiempo de vida estimado de la persona
 
+class SolicitudHipoteca:
+    def __init__(self, valor_inmueble, edad, estado_civil, edad_conyugue, sexo_conyugue, tasa_interes):
+        self.valor_inmueble = valor_inmueble
+        self.edad = edad
+        self.estado_civil = estado_civil
+        self.edad_conyugue = edad_conyugue
+        self.sexo_conyugue = sexo_conyugue
+        self.tasa_interes = tasa_interes
+
 class Calcular_Hipoteca_Inversa:
-    def Calcular_Cuota_Mensual(valor_inmueble: float, interes: float, tiempo_restante: int):
+    def Calcular_Cuota_Mensual(solicitud):
         """
             Calculate the monthly payment for a reverse mortgage
 
@@ -85,18 +94,9 @@ class Calcular_Hipoteca_Inversa:
 
             Parameters
             ----------
-
-            valor_inmueble : float
-                property value / valor del inmueble
-
-            interes : float
-                must not be zero or less than
-                INTERES_MINIMO / Tasa minima de interes, valor positivo mayor que INTERES_MINIMO
-                and must not be zero or greater than
-                INTERES_MAXIMO / Tasa minima de interes, valor positivo mayor que INTERES_MAXIMO
-            
-            tiempo_restante : int
-                Remaining life of the person in months / Tiempo de vida restante de la persona en meses
+            solicitud : SolicitudHipoteca
+                Object containing all the parameters needed for the calculation.
+                Objeto que contiene todos los parámetros necesarios para el cálculo.
 
             Returns
             -------
@@ -117,27 +117,96 @@ class Calcular_Hipoteca_Inversa:
             NegativeException
                 When any value is zero 
         """
+        valor_inmueble = solicitud.valor_inmueble
+        interes = solicitud.tasa_interes
+        tiempo_restante = solicitud.tiempo_restante
 
         # Divide el porcentaje de la tasa por 100 para que quede en decimales
         porcentaje_tasa = interes / 100
-
-        
         
         # Calcula el valor de la cuota mensual
         cuota_mensual = (valor_inmueble * porcentaje_tasa) / tiempo_restante
         return cuota_mensual
+    
+    def Validar_Entradas(solicitud):
+        """
+        Valida las entradas del usuario para garantizar que cumplan con los requisitos establecidos.
 
+        Parameters
+        ----------
+        solicitud : SolicitudHipoteca
+            Object containing all the parameters needed for validation.
+            Objeto que contiene todos los parámetros necesarios para la validación.
 
-    def Logica(valor_inmueble: float, edad: int, estado_civil: str, edad_conyugue: int, sexo_conyugue: str, tasa_interes: float):
-        
+        Raises
+        ------
+        Hipoteca_Exception
+            Cuando el valor de la propiedad es inválido.
+
+        Edad_Minima_Exception
+            Cuando la edad del solicitante es inválida.
+
+        Tasa_Exception
+            Cuando la tasa de interés es inválida.
+
+        Negative_Exception
+            Cuando se proporciona un valor negativo.
+
+        None_Exception
+            Cuando se proporciona un valor nulo.
+
+        """
+        valor_inmueble = solicitud.valor_inmueble
+        edad = solicitud.edad
+        estado_civil = solicitud.estado_civil
+        edad_conyugue = solicitud.edad_conyugue
+        sexo_conyugue = solicitud.sexo_conyugue
+        tasa_interes = solicitud.tasa_interes
+
         Calcular_Hipoteca_Inversa.verificarValor_Inmueble(valor_inmueble)
-
         Calcular_Hipoteca_Inversa.verificarEdad(edad, edad_conyugue)
-
         Calcular_Hipoteca_Inversa.verificarValores_negativos(valor_inmueble, tasa_interes, edad)
-
         Calcular_Hipoteca_Inversa.verificarValores_vacios(valor_inmueble, tasa_interes, edad)
-        
+        Calcular_Hipoteca_Inversa.verificarTasa_Interes(tasa_interes)
+
+        if estado_civil.lower() not in ESTADOS_CIVILES:
+            raise Exception("Hubo un error con su estado civil, debe ingresar si es: soltero/a, viudo/a, casado/a, divorciado/a")
+            
+        elif sexo_conyugue.lower() not in SEXOS:
+            raise Exception("Hubo un error con el sexo de su conyugue, debe ingresar si es: masculino, femenino, hombre, mujer")
+
+    def Logica(solicitud):
+        """
+        Realiza la lógica de cálculo de la hipoteca inversa.
+
+        Parameters
+        ----------
+        solicitud : SolicitudHipoteca
+            Object containing all the parameters needed for the calculation.
+            Objeto que contiene todos los parámetros necesarios para el cálculo.
+
+        Returns
+        -------
+        float
+            Monthly payment calculated.
+            Pago mensual calculado.
+
+        Raises
+        ------
+        Various exceptions based on validation.
+
+        """
+        valor_inmueble = solicitud.valor_inmueble
+        edad = solicitud.edad
+        estado_civil = solicitud.estado_civil
+        edad_conyugue = solicitud.edad_conyugue
+        sexo_conyugue = solicitud.sexo_conyugue
+        tasa_interes = solicitud.tasa_interes
+
+        Calcular_Hipoteca_Inversa.verificarValor_Inmueble(valor_inmueble)
+        Calcular_Hipoteca_Inversa.verificarEdad(edad, edad_conyugue)
+        Calcular_Hipoteca_Inversa.verificarValores_negativos(valor_inmueble, tasa_interes, edad)
+        Calcular_Hipoteca_Inversa.verificarValores_vacios(valor_inmueble, tasa_interes, edad)
         Calcular_Hipoteca_Inversa.verificarTasa_Interes(tasa_interes)
 
         if estado_civil.lower() not in ESTADOS_CIVILES:
@@ -156,20 +225,20 @@ class Calcular_Hipoteca_Inversa:
                 tiempo_restante_conyugue = (ESPERANZA_VIDA_MUJERES - edad_conyugue) * MESES_AÑO
             # Se pregunta si la persona no tiene conyugue, para así calcular la hipoteca inversa solo con él/ella
             if estado_civil.lower() == "viudo" or estado_civil.lower() == "soltero" or estado_civil.lower() == "divorciado" or estado_civil.lower() == "viuda" or estado_civil.lower() == "soltera" or estado_civil.lower() == "divorciada":
-                return Calcular_Hipoteca_Inversa.Calcular_Cuota_Mensual(valor_inmueble, tasa_interes, tiempo_restante)
+                return Calcular_Hipoteca_Inversa.Calcular_Cuota_Mensual(solicitud)
             # Se pregunta si la persona tiene conyugue, para así calcular cual de los dos vivirá más
             elif estado_civil == "casado" or estado_civil == "casada":
                 if tiempo_restante > tiempo_restante_conyugue and edad >= EDAD_MINIMA:
-                    return Calcular_Hipoteca_Inversa.Calcular_Cuota_Mensual(valor_inmueble, tasa_interes, tiempo_restante)
+                    return Calcular_Hipoteca_Inversa.Calcular_Cuota_Mensual(solicitud)
                 else:
                     if tiempo_restante > tiempo_restante_conyugue and edad >= EDAD_MINIMA:
-                        return Calcular_Hipoteca_Inversa.Calcular_Cuota_Mensual(valor_inmueble, tasa_interes, tiempo_restante)
+                        return Calcular_Hipoteca_Inversa.Calcular_Cuota_Mensual(solicitud)
                     else:
                         if tiempo_restante > tiempo_restante_conyugue and edad_conyugue >= EDAD_MINIMA:
-                            return Calcular_Hipoteca_Inversa.Calcular_Cuota_Mensual(valor_inmueble, tasa_interes, tiempo_restante_conyugue)
+                            return Calcular_Hipoteca_Inversa.Calcular_Cuota_Mensual(solicitud)
                         else:
-                            return Calcular_Hipoteca_Inversa.Calcular_Cuota_Mensual(valor_inmueble, tasa_interes, tiempo_restante)
-        
+                            return Calcular_Hipoteca_Inversa.Calcular_Cuota_Mensual(solicitud)
+
     # Verifica que la tasa de interes no sea 0, que no este por debajo del valor minimo y que no supere el valor maximo
     def verificarTasa_Interes(interes):
         if interes < INTERES_MINIMO:
